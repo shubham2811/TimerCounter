@@ -1,25 +1,34 @@
 import "./styles.css";
 import { useEffect, useState } from "react";
 export default function App() {
-  const [count, setCount] = useState(0);
-
-  let timer;
+  let [count, setCount] = useState(5);
+  const [isRunning, setIsRunning] = useState(false);
   useEffect(() => {
-    if (count) {
-      timer = setTimeout(handleStart, 1000);
+    if (isRunning) {
+      let counter = count;
+      const intervalId = setInterval(() => {
+        if (--counter <= 0) {
+          handleReset();
+        } else {
+          setCount(counter);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(intervalId);
+      };
     }
-  }, [count]);
+  }, [isRunning]);
 
   const handleStart = () => {
-    setCount((count) => count + 1);
+    setIsRunning(true);
   };
   const handleStop = () => {
-    clearTimeout(timer);
+    setIsRunning(!isRunning);
   };
 
   const handleReset = () => {
-    setCount(0);
-    clearTimeout(timer);
+    setCount(5);
+    setIsRunning(false);
   };
 
   return (
